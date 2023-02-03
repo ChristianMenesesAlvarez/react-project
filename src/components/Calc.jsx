@@ -18,13 +18,15 @@ export default function Calc() {
         setScreen('');
         break;
       case 'C':
-        const scrStr1 = screenText.slice(0, -1);
-        setScreen(scrStr1);
+        const scrStrRemove = screenText.slice(0, -1);
+        setScreen(scrStrRemove);
         break;
       default:
-        const scrStr2 = screenText + e.target.value;
-        setScreen(scrStr2);
+        const scrStrAdd = screenText + e.target.value;
+        setScreen(scrStrAdd);
+        break;
     }
+    return;
   }
 
   return (
