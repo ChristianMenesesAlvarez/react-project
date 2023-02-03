@@ -56,9 +56,7 @@ function Panel(props) {
     <div className="panel">
       <div className="panel-row">
         {row1.map(i =>
-          <button className="panel-btn" value={i} key={`key${i}`} onClick={callback} >
-            {i}
-          </button>
+          <button className="panel-btn" value={i} key={`key${i}`} onClick={callback} >{i}</button>
         )}
       </div>
       <div className="panel-row">
