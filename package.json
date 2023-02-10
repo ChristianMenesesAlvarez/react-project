@@ -1,12 +1,15 @@
 {
   "name": "react-project",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
   "type": "module",
+  "main": "src/main.jsx",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "vite run",
+    "build": "vite build --base=/index.html",
+    "preview": "vite preview",
+    "optimize": "vite optimize"
   },
   "dependencies": {
     "i18next": "^22.4.9",
