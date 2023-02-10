@@ -2,30 +2,34 @@ import { useState } from "react";
 import { getCombinations, findMatchPosition } from '../logic/matrix.js';
 
 export default function Grid(props) {
-  const { columns, rows } = props;
+  const { columns, rows, token1, token2, repeatTimes } = props;
   const emptyGrid = [...Array(columns)].map(e => Array(rows).fill(''));
   const [gridState, setGrid] = useState(emptyGrid);
   const [activeToken, setToken] = useState(true);
 
   const insertToken = (column) => {
     const newArray = [...gridState];
-    const playerToken = activeToken ? 'X' : 'O';  
+    const playerToken = activeToken ? token1 : token2;  
     const index = newArray[column].findLastIndex(e => e === '');
     
     if (index === -1) {
       return;
     } else {
       newArray[column][index] = playerToken;
-      setToken(!activeToken);
       setGrid(newArray);
+      setToken(!activeToken);
     }
   }
   
   useEffect(() => {
-    const array = getCombinations(gridState);
-    if (combArray.some(item => item.match(/XXXX/))) alert('Player X wins!');
-    if (combArray.some(item => item.match(/OOOO/))) alert('Player O wins!');    
-  }, [gridState])
+    const winner = activeToken.repeat(repeatTimes);
+    const combArray = getCombinations(gridState);
+    if (combArray.some(item => item.match(winner))) {
+      alert(`Player ${activeToken} wins!`);
+      const pos = findMatchPosition(gridState, winner, 'i');
+      console.log(pos);
+    }
+  }, [activeToken])
   
   return (
     <>
