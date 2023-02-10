@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getCombinations } from '../logic/matrix.js';
 
 export default function Grid(props) {
@@ -18,18 +18,18 @@ export default function Grid(props) {
     } else {
       newArray[column][index] = playerToken;
       setGrid(newArray);
-      if (checkWinner(newArray, playerToken)) setToken(!activeToken);
+      if (!checkWinner(newArray, playerToken)) setToken(!activeToken);
     }
   }
 
-  function checkWinner(arr, token) {
+  const checkWinner = (arr, token) => {
     const winner = token.repeat(repeatTimes);
     const combArray = getCombinations(arr);
     if (combArray.some(item => item.match(winner))) {
       hasWon(true);
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 
