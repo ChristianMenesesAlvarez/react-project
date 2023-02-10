@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getCombinations, findMatchPosition } from '../logic/matrix.js';
 
 export default function Grid(props) {
   const { columns, rows } = props;
@@ -6,33 +7,31 @@ export default function Grid(props) {
   const [gridState, setGrid] = useState(emptyGrid);
   const [activeToken, setToken] = useState(true);
 
-  const setNewArray = (column) => {
+  const insertToken = (column) => {
     const newArray = [...gridState];
-    if (!newArray[column].includes('')) return;
-    const playerToken = activeToken ? 'X' : 'O';
-    for (let z = (newArray[column].length - 1); z >= 0; z--) {
-      if (newArray[column][z] === '') {
-        newArray[column][z] = playerToken;
-        break;
-      }
+    const playerToken = activeToken ? 'X' : 'O';  
+    const index = newArray[column].findLastIndex(e => e === '');
+    
+    if (index === -1) {
+      return;
+    } else {
+      newArray[column][index] = playerToken;
+      setToken(!activeToken);
+      setGrid(newArray);
     }
-    setToken(!activeToken);
-    setGrid(newArray);
-    winHandler(newArray);
   }
-
-  const winHandler = (array) => {
-    const combArray = getCombinations(array);
+  
+  useEffect(() => {
+    const array = getCombinations(gridState);
     if (combArray.some(item => item.match(/XXXX/))) alert('Player X wins!');
-    if (combArray.some(item => item.match(/OOOO/))) alert('Player O wins!');
-    return;
-  }
-
+    if (combArray.some(item => item.match(/OOOO/))) alert('Player O wins!');    
+  }, [gridState])
+  
   return (
     <>
       <div className="button-panel">
         {[...Array(columns)].map((i, col) =>
-          <button key={col} onClick={() => { setNewArray(col) }}>Insert token</button>
+          <button key={col} onClick={() => { insertToken(col) }}>Insert token</button>
         )}
       </div>
       <div className="grid">
@@ -44,48 +43,4 @@ export default function Grid(props) {
       </div>
     </>
   )
-}
-
-function getCombinations(arr) {
-  const rows = arr.length;
-  const columns = arr[0].length;
-  let returnedSet = new Set();
-
-  // Horizontals
-  for (let x = 0; x < rows; x++) {
-    let str1 = '', str2 = '';
-    for (let y = 0; y < columns; y++) str1 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let y = (columns - 1); y >= 0; y--) str2 += arr[x][y] === '' ? '_' : arr[x][y];
-    returnedSet.add(str1).add(str2);
-  }
-
-  // Verticals
-  for (let y = 0; y < columns; y++) {
-    let str1 = '', str2 = '';
-    for (let x = 0; x < rows; x++) str1 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let x = (rows - 1); x >= 0; x--) str2 += arr[x][y] === '' ? '_' : arr[x][y];
-    returnedSet.add(str1).add(str2);
-  }
-
-  // Diagonals From Left/Right Column
-  for (let init = 0; init < rows; init++) {
-    let str1 = '', str2 = '', str3 = '', str4 = '';
-    for (let x = init, y = 0; x >= 0 && y < columns; x--, y++) str1 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let x = init, y = 0; x < rows && y < columns; x++, y++) str2 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let x = init, y = (columns - 1); x >= 0 && y >= 0; x--, y--) str3 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let x = init, y = (columns - 1); x < rows && y >= 0; x++, y--) str4 += arr[x][y] === '' ? '_' : arr[x][y];
-    returnedSet.add(str1).add(str2).add(str3).add(str4);
-  }
-
-  // Diagonals From Top/Bottom Row
-  for (let init = 0; init < columns; init++) {
-    let str1 = '', str2 = '', str3 = '', str4 = '';
-    for (let y = init, x = 0; y >= 0 && x < rows; x++, y--) str1 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let y = init, x = 0; y < columns && x < rows; x++, y++) str2 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let y = init, x = (rows - 1); y >= 0 && x >= 0; x--, y--) str3 += arr[x][y] === '' ? '_' : arr[x][y];
-    for (let y = init, x = (rows - 1); y < columns && x >= 0; x--, y++) str4 += arr[x][y] === '' ? '_' : arr[x][y];
-    returnedSet.add(str1).add(str2).add(str3).add(str4);
-  }
-
-  return [...returnedSet];
 }
