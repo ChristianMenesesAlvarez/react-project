@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite run",
-    "build": "vite build --base=/index.html",
+    "build": "vite build",
     "preview": "vite preview",
     "optimize": "vite optimize"
   },
