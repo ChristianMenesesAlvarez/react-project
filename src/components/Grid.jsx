@@ -6,6 +6,7 @@ export default function Grid(props) {
   const emptyGrid = [...Array(columns)].map(e => Array(rows).fill(''));
   const [gridState, setGrid] = useState(emptyGrid);
   const [activeToken, setToken] = useState(true);
+  const [won, hasWon] = useState(false);
 
   const insertToken = (column) => {
     const newArray = [...gridState];
@@ -25,7 +26,7 @@ export default function Grid(props) {
     const winner = activeToken.repeat(repeatTimes);
     const combArray = getCombinations(gridState);
     if (combArray.some(item => item.match(winner))) {
-      alert(`Player ${activeToken} wins!`);
+      hasWon(true);
       const pos = findMatchPosition(gridState, winner, 'i');
       console.log(pos);
     }
@@ -33,15 +34,16 @@ export default function Grid(props) {
   
   return (
     <>
+      {won && <h1>{`Player ${activeToken} wins!`}</h1>}
       <div className="button-panel">
         {[...Array(columns)].map((i, col) =>
-          <button key={col} onClick={() => { insertToken(col) }}>Insert token</button>
+          <button key={col} disabled={won} onClick={() => { insertToken(col) }}>Insert token</button>
         )}
       </div>
       <div className="grid">
-        {[...Array(columns)].map((item, col) =>
+        {[...Array(columns)].map((i, col) =>
           <div className="cell-column" key={col}>
-            {rows.map((item, row) => <div className="cell" key={row} >{item}</div>)}
+            {rows.map((j, row) => <div className='cell' key={row} >{j}</div>)}
           </div>
         )}
       </div>
