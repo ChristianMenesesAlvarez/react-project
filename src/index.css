@@ -80,7 +80,8 @@ button:focus-visible {
   height: 50px;
   border: 2px solid black;
   color: black;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
   background: white;
 }
 

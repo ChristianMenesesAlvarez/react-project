@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { getCombinations, findMatchPosition } from '../logic/matrix.js';
+import { useState, useEffect } from "react";
+import { getCombinations } from '../logic/matrix.js';
 
 export default function Grid(props) {
   const { columns, rows, token1, token2, repeatTimes } = props;
@@ -10,40 +10,41 @@ export default function Grid(props) {
 
   const insertToken = (column) => {
     const newArray = [...gridState];
-    const playerToken = activeToken ? token1 : token2;  
+    const playerToken = activeToken ? token1 : token2;
     const index = newArray[column].findLastIndex(e => e === '');
-    
+
     if (index === -1) {
       return;
     } else {
       newArray[column][index] = playerToken;
       setGrid(newArray);
-      setToken(!activeToken);
+      if (checkWinner(newArray, playerToken)) setToken(!activeToken);
     }
   }
-  
-  useEffect(() => {
-    const winner = activeToken.repeat(repeatTimes);
-    const combArray = getCombinations(gridState);
+
+  function checkWinner(arr, token) {
+    const winner = token.repeat(repeatTimes);
+    const combArray = getCombinations(arr);
     if (combArray.some(item => item.match(winner))) {
       hasWon(true);
-      const pos = findMatchPosition(gridState, winner, 'i');
-      console.log(pos);
+      return false;
+    } else {
+      return true;
     }
-  }, [activeToken])
-  
+  }
+
   return (
     <>
-      {won && <h1>{`Player ${activeToken} wins!`}</h1>}
+      {won && <h1>{`Player ${activeToken ? token1 : token2} wins!`}</h1>}
       <div className="button-panel">
         {[...Array(columns)].map((i, col) =>
           <button key={col} disabled={won} onClick={() => { insertToken(col) }}>Insert token</button>
         )}
       </div>
       <div className="grid">
-        {[...Array(columns)].map((i, col) =>
+        {gridState.map((i, col) =>
           <div className="cell-column" key={col}>
-            {rows.map((j, row) => <div className='cell' key={row} >{j}</div>)}
+            {i.map((j, row) => <div className='cell' key={row} >{j}</div>)}
           </div>
         )}
       </div>
