@@ -2,7 +2,9 @@ import { useState } from "react";
 
 export default function Grid(props) {
   const { columns, rows } = props;
-
+  
+  var myGrid = [...Array(6)].map(e => Array(6).fill(value));
+  
   const defineGrid = () => {
     let array = [];
     for (let x = 0; x < columns; x++) {
