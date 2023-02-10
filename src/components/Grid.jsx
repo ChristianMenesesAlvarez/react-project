@@ -30,37 +30,19 @@ export default function Grid(props) {
 
   return (
     <>
-      <ButtonPanel columns={columns} callback={setNewArray} />
+      <div className="button-panel">
+        {[...Array(columns)].map((i, col) =>
+          <button key={col} onClick={() => { setNewArray(col) }}>Insert token</button>
+        )}
+      </div>
       <div className="grid">
-        {[...Array(columns)].map((item, index) =>
-          <CellColumn rows={gridState[index]} key={index} />
+        {[...Array(columns)].map((item, col) =>
+          <div className="cell-column" key={col}>
+            {rows.map((item, row) => <div className="cell" key={row} >{item}</div>)}
+          </div>
         )}
       </div>
     </>
-  )
-}
-
-function ButtonPanel(props) {
-  const { columns, callback } = props;
-
-  return (
-    <div className="button-panel">
-      {[...Array(columns)].map((i, index) =>
-        <button key={index} onClick={() => { callback(index) }}>
-          Poner ficha
-        </button>
-      )}
-    </div>
-  )
-}
-
-function CellColumn(props) {
-  const { rows } = props;
-  return (
-    <div className="cell-column">
-      {rows.map((item, index) => <div className="cell" key={index} >{item}</div>)}
-    </div>
-
   )
 }
 
