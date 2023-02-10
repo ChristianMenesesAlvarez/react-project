@@ -2,33 +2,21 @@ import { useState } from "react";
 
 export default function Grid(props) {
   const { columns, rows } = props;
-  
-  var myGrid = [...Array(6)].map(e => Array(6).fill(value));
-  
-  const defineGrid = () => {
-    let array = [];
-    for (let x = 0; x < columns; x++) {
-      let row = [];
-      for (let y = 0; y < rows; y++) row.push('');
-      array.push(row);
-    }
-    return array;
-  }
-
-  const [gridState, setGrid] = useState(defineGrid());
-  const [player, setPlayer] = useState(true);
+  const emptyGrid = [...Array(columns)].map(e => Array(rows).fill(''));
+  const [gridState, setGrid] = useState(emptyGrid);
+  const [activeToken, setToken] = useState(true);
 
   const setNewArray = (column) => {
     const newArray = [...gridState];
     if (!newArray[column].includes('')) return;
-    const playerToken = player ? 'X' : 'O';
+    const playerToken = activeToken ? 'X' : 'O';
     for (let z = (newArray[column].length - 1); z >= 0; z--) {
       if (newArray[column][z] === '') {
         newArray[column][z] = playerToken;
         break;
       }
     }
-    setPlayer(!player);
+    setToken(!activeToken);
     setGrid(newArray);
     winHandler(newArray);
   }
@@ -53,13 +41,12 @@ export default function Grid(props) {
 }
 
 function ButtonPanel(props) {
-  const { columns } = props;
-  const insertToken = (column) => props.callback(column);
+  const { columns, callback } = props;
 
   return (
     <div className="button-panel">
       {[...Array(columns)].map((i, index) =>
-        <button key={index} onClick={() => { insertToken(index) }}>
+        <button key={index} onClick={() => { callback(index) }}>
           Poner ficha
         </button>
       )}
