@@ -7,28 +7,40 @@ export function DogApi() {
     const [allBreeds, setAllBreeds] = useState([]);
     const [randomImage, setRandomImage] = useState('');
     const [imageArray, setImageArray] = useState([]);
-    const [inputs, setInputs] = useState({});
 
     const getAllBreeds = async (filter) => {
-        const res = await axios.get('https://dog.ceo/api/breeds/list/all');
-        const data = res.data.message;
-        const arr = [];
-        Object.keys(data).forEach(i => data[i].length === 0 ? arr.push(i) : data[i].forEach(e => arr.push(e + ' ' + i)));
-        const filtered = arr.filter(e => e.match(filter))
-        return setAllBreeds(filtered);
+        try {
+            const res = await axios.get('https://dog.ceo/api/breeds/list/all');
+            const data = res.data.message;
+            const arr = [];
+            Object.keys(data).forEach(i => data[i].length === 0 ? arr.push(i) : data[i].forEach(e => arr.push(e + ' ' + i)));
+            const filtered = arr.filter(e => e.match(filter))
+            return setAllBreeds(filtered);
+        } catch (e) {
+            return console.log(e.message);
+        }
     }
 
     const getRandomImage = async () => {
-        const res = await axios.get('https://dog.ceo/api/breeds/image/random');
-        const data = res.data.message;
-        return setRandomImage(data);
+        try {
+            const res = await axios.get('https://dog.ceo/api/breeds/image/random');
+            const data = res.data.message;
+            return setRandomImage(data);
+        } catch (e) {
+            return console.log(e.message);
+        }
     }
 
-    const getBreed = (breed) => {
-        const getBreed = breed.split(' ');
-        const res = await axios.get('https://dog.ceo/api/breed/' + getBreed[1] + '/images');
-        const data = res.data.message;
-        return setImageArray(data);
+    const getBreed = async (breed) => {
+        try {
+            const getBreed = breed.split(' ');
+            console.log(getBreed[1])
+            const res = await axios.get('https://dog.ceo/api/breed/' + getBreed[1] + '/images');
+            const data = res.data.message;
+            return setImageArray(data);
+        } catch (e) {
+            return console.log(e.message);
+        }
     }
 
     const handleChange = (e) => {
@@ -45,7 +57,7 @@ export function DogApi() {
         <>
             <div className="header-wrapper">
                 <div className="random-image">
-                    <img src={randomImage.split('\/').slice(5, 6)} alt={randomImage.split('\/').slice(4, 5)} />
+                    <img src={randomImage} alt={randomImage.split('\/').slice(4, 5)} />
                     <button onClick={getRandomImage} >New Random Image</button>
                 </div>
                 <div className="search-bar">
