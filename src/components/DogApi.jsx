@@ -14,8 +14,8 @@ export function DogApi() {
         const data = res.data.message;
         const arr = [];
         Object.keys(data).forEach(i => data[i].length === 0 ? arr.push(i) : data[i].forEach(e => arr.push(e + ' ' + i)));
-        const filter = arr.filter(e => e.matchAll(filter))
-        return setAllBreeds(filter);
+        const filtered = arr.filter(e => e.matchAll(filter))
+        return setAllBreeds(filtered);
     }
 
     const getRandomImage = async () => {
